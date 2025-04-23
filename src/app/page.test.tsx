@@ -189,4 +189,20 @@ describe("Home UI", () => {
     }).not.toThrow();
     expect(getByText("Final")).toBeInTheDocument();
   });
+
+  it("input and container are always centered and mobile safe", () => {
+    const { getByPlaceholderText, container } = render(<Home />);
+    fireEvent.click(
+      container.querySelector("[class*='Dynamic Island Todo List']") ||
+        getByPlaceholderText("Add a new task")
+    );
+    const input = getByPlaceholderText("Add a new task");
+    expect(input).toHaveClass("text-center");
+    expect(input).toHaveAttribute("inputmode", "text");
+    expect(input).toHaveAttribute("pattern", ".*");
+    const parent = input.closest(".mx-auto");
+    expect(parent).not.toBeNull();
+    const meta = document.querySelector('meta[name="viewport"]');
+    expect(meta?.getAttribute("content")).toMatch(/user-scalable=0/);
+  });
 });

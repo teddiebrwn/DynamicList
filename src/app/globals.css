@@ -96,14 +96,3 @@ body {
     rgba(80, 80, 120, 0.8) 100%
   );
 }
-
-html,
-body {
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  overscroll-behavior: none;
-  overflow: hidden;
-  touch-action: none;
-}

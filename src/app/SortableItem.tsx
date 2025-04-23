@@ -81,13 +81,12 @@ export const SortableItem = memo(function SortableItem({
       }${isOver ? " border-b-4 border-blue-400" : ""}`}
       ref={setNodeRef}
       style={style}
+      {...(isEditing === task.id ? {} : { ...attributes, ...listeners })}
     >
       <span
         className={`cursor-move select-none flex items-center${
           isEditing === task.id ? " hidden" : " mr-1"
         }`}
-        {...attributes}
-        {...listeners}
         aria-label="drag"
       ></span>
       {isEditing === task.id ? (

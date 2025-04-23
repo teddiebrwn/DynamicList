@@ -5,7 +5,7 @@ import { useSortable, defaultAnimateLayoutChanges } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Task, Action } from "./reducer";
 import { Dispatch, memo, useCallback, useRef } from "react";
-import { Check, X, Pencil, Dot } from "lucide-react";
+import { Check, X, Pencil } from "lucide-react";
 
 type Props = {
   id: string;

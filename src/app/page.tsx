@@ -188,10 +188,10 @@ export default function Home() {
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-between px-4 py-1.5 bg-black/80 border border-neutral-700 rounded-2xl shadow-2xl transition-all duration-300 cursor-pointer select-none min-w-[140px] w-[80vw] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 backdrop-blur-md hover:scale-105 hover:shadow-[0_8px_32px_0_rgba(0,0,0,0.45)] active:scale-95 animate-[dynamicIslandOpen_400ms_cubic-bezier(0.4,0,0.2,1)] opacity-100 scale-100 pointer-events-auto"
           onClick={() => setIsOpen(true)}
         >
-          <h2 className="text-base font-semibold tracking-tight text-white">
+          <h2 className="text-base font-semibold tracking-tight bg-gradient-to-r from-neutral-400 via-white to-neutral-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_2.5s_linear_infinite]">
             Dynamic Island Todo List
           </h2>
-          <span className="bg-white text-xs font-bold text-neutral-900 rounded-lg px-2 py-0.5 ml-2 shadow">
+          <span className="bg-white text-xs font-bold text-neutral-900 rounded-full px-2 py-0.5 ml-2 shadow">
             {state.tasks.length}
           </span>
         </div>

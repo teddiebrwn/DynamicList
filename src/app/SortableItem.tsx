@@ -5,7 +5,7 @@ import { useSortable, defaultAnimateLayoutChanges } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Task, Action } from "./reducer";
 import { Dispatch, memo, useCallback, useRef } from "react";
-import { Check, X, Pencil } from "lucide-react";
+import { Check, X, Pencil, Dot } from "lucide-react";
 
 type Props = {
   id: string;
@@ -74,36 +74,39 @@ export const SortableItem = memo(function SortableItem({
   }, [deleteTask, task.id]);
   return (
     <li
-      className={`flex items-center w-full px-0 gap-2 py-1 rounded-lg shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] hover:shadow-[0_4px_16px_0_rgba(0,0,0,0.14)] transition-colors transition-shadow duration-150 group backdrop-blur text-white/90 text-sm min-h-[32px]${
-        isDragging
-          ? " z-20 ring-2 ring-blue-400 bg-neutral-800/90 scale-105"
-          : ""
-      }${isOver ? " border-b-4 border-blue-400" : ""}`}
+      className={`flex items-center w-full  gap-2 px-1 py-1 rounded-lg shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] hover:shadow-[0_4px_16px_0_rgba(0,0,0,0.14)] transition-colors transition-shadow duration-150 group backdrop-blur text-white/90 text-sm min-h-[32px] relative${
+        isDragging ? " z-20 bg-neutral-800/90 scale-105" : ""
+      }`}
       ref={setNodeRef}
       style={style}
     >
+      {isDragging && (
+        <div
+          className="pointer-events-none absolute inset-0 rounded-lg border-2 border-transparent animate-[shimmer_2.5s_linear_infinite]"
+          style={{
+            background:
+              "linear-gradient(90deg, #a3a3a3 0%, #fff 50%, #a3a3a3 100%)",
+            backgroundSize: "200% 100%",
+            WebkitMask:
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            boxSizing: "border-box",
+          }}
+        />
+      )}
+      {isOver && (
+        <div className="absolute left-0 right-0 bottom-0 h-1.5 rounded-b shimmer-bg animate-shimmer" />
+      )}
       <span
-        className={`cursor-grab select-none flex items-center${
+        className={`w-4 h-4  border-r-[1px] border-dashed border-neutral-800  cursor-grab select-none flex items-center${
           isEditing === task.id ? " hidden" : " mr-1"
         }`}
         aria-label="drag"
         style={{ touchAction: "pan-y" }}
         {...(isEditing === task.id ? {} : { ...attributes, ...listeners })}
       >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 20 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="7" cy="6" r="1.5" fill="currentColor" />
-          <circle cx="7" cy="10" r="1.5" fill="currentColor" />
-          <circle cx="7" cy="14" r="1.5" fill="currentColor" />
-          <circle cx="13" cy="6" r="1.5" fill="currentColor" />
-          <circle cx="13" cy="10" r="1.5" fill="currentColor" />
-          <circle cx="13" cy="14" r="1.5" fill="currentColor" />
-        </svg>
+        &#8203;
       </span>
       {isEditing === task.id ? (
         <>

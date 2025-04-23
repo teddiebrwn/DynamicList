@@ -1,6 +1,5 @@
 "use client";
 import { Plus, Loader2 } from "lucide-react";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -105,6 +104,8 @@ export default function Home() {
       overId: event.active?.id?.toString() ?? null,
       activeId: event.active?.id?.toString() ?? null,
     });
+    document.body.classList.remove("overflow-hidden");
+    document.documentElement.classList.remove("overflow-hidden");
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -117,11 +118,21 @@ export default function Home() {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     setDragState({ overId: null, activeId: null });
-    if (!over || active.id === over.id) return;
+    if (!over || active.id === over.id) {
+      if (isOpen) {
+        document.body.classList.add("overflow-hidden");
+        document.documentElement.classList.add("overflow-hidden");
+      }
+      return;
+    }
     const oldIndex = state.tasks.findIndex((task) => task.id === active.id);
     const newIndex = state.tasks.findIndex((task) => task.id === over.id);
     const newTasks = arrayMove(state.tasks, oldIndex, newIndex);
     dispatch({ type: "REORDER_TASKS", payload: newTasks });
+    if (isOpen) {
+      document.body.classList.add("overflow-hidden");
+      document.documentElement.classList.add("overflow-hidden");
+    }
   };
 
   useEffect(() => {
@@ -144,14 +155,28 @@ export default function Home() {
     useSensor(PointerSensor),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 250,
-        tolerance: 12,
+        delay: 150,
+        tolerance: 2,
       },
     })
   );
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("overflow-hidden");
+      document.documentElement.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+      document.documentElement.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+      document.documentElement.classList.remove("overflow-hidden");
+    };
+  }, [isOpen]);
+
   return (
-    <div className="relative min-h-screen w-full bg-neutral-950 p-2">
+    <div className="relative min-h-screen w-full bg-neutral-950 p-2 flex items-center justify-center">
       <div
         className="pointer-events-none absolute inset-0 z-10 opacity-10"
         style={{
@@ -173,7 +198,7 @@ export default function Home() {
       )}
       {isOpen && (
         <div
-          className="fixed left-1/2 w-[80vw] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 bg-black/80 border border-neutral-700 rounded-2xl shadow-2xl p-4 transition-all duration-300 ease-in-out transform backdrop-blur-md animate-[dynamicIslandOpen_400ms_cubic-bezier(0.4,0,0.2,1)] opacity-100 scale-100 pointer-events-auto top-12 sm:top-1/2 sm:-translate-y-1/2 -translate-x-1/2"
+          className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 bg-black/80 border border-neutral-700 rounded-2xl shadow-2xl p-4 transition-all duration-300 ease-in-out transform backdrop-blur-md animate-[dynamicIslandOpen_400ms_cubic-bezier(0.4,0,0.2,1)] opacity-100 scale-100 pointer-events-auto h-fit max-h-[90vh]"
           ref={wrapperRef}
         >
           <div className="flex items-center gap-2 mb-4">
@@ -238,7 +263,7 @@ export default function Home() {
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
-            modifiers={[restrictToParentElement, restrictToVerticalAxis]}
+            modifiers={[restrictToVerticalAxis]}
           >
             <SortableContext
               items={state.tasks.map((t) => t.id)}

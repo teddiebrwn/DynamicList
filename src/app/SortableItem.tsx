@@ -81,14 +81,30 @@ export const SortableItem = memo(function SortableItem({
       }${isOver ? " border-b-4 border-blue-400" : ""}`}
       ref={setNodeRef}
       style={style}
-      {...(isEditing === task.id ? {} : { ...attributes, ...listeners })}
     >
       <span
-        className={`cursor-move select-none flex items-center${
+        className={`cursor-grab select-none flex items-center${
           isEditing === task.id ? " hidden" : " mr-1"
         }`}
         aria-label="drag"
-      ></span>
+        style={{ touchAction: "pan-y" }}
+        {...(isEditing === task.id ? {} : { ...attributes, ...listeners })}
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="7" cy="6" r="1.5" fill="currentColor" />
+          <circle cx="7" cy="10" r="1.5" fill="currentColor" />
+          <circle cx="7" cy="14" r="1.5" fill="currentColor" />
+          <circle cx="13" cy="6" r="1.5" fill="currentColor" />
+          <circle cx="13" cy="10" r="1.5" fill="currentColor" />
+          <circle cx="13" cy="14" r="1.5" fill="currentColor" />
+        </svg>
+      </span>
       {isEditing === task.id ? (
         <>
           <input

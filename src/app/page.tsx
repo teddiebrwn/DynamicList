@@ -198,7 +198,7 @@ export default function Home() {
       )}
       {isOpen && (
         <div
-          className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 bg-black/80 border border-neutral-700 rounded-2xl shadow-2xl p-4 transition-all duration-300 ease-in-out transform backdrop-blur-md animate-[dynamicIslandOpen_400ms_cubic-bezier(0.4,0,0.2,1)] opacity-100 scale-100 pointer-events-auto h-fit max-h-[90vh] mx-auto flex flex-col justify-center"
+          className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 bg-black/80 border border-neutral-700 rounded-2xl shadow-2xl p-4 transition-all duration-300 ease-in-out transform backdrop-blur-md animate-[dynamicIslandOpen_400ms_cubic-bezier(0.4,0,0.2,1)] opacity-100 scale-100 pointer-events-auto h-fit max-h-[90vh]"
           ref={wrapperRef}
         >
           <div className="flex items-center gap-2 mb-4">
@@ -229,10 +229,7 @@ export default function Home() {
                       if (e.key === "Enter") handleAddTask();
                     }}
                     placeholder="Add a new task"
-                    className="flex-1 px-2 h-8 border border-neutral-700 rounded bg-neutral-900/80 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner text-sm text-center"
-                    style={{ WebkitUserSelect: "auto", textAlign: "center" }}
-                    inputMode="text"
-                    pattern=".*"
+                    className="flex-1 px-2 h-8 border border-neutral-700 rounded bg-neutral-900/80 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner text-sm"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}

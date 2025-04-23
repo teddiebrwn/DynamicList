@@ -119,7 +119,8 @@ export const SortableItem = memo(function SortableItem({
               if (e.key === "Enter") handleSaveEdit();
             }}
             autoFocus
-            className="w-full flex-1 px-2 h-8 ml-0 border border-neutral-700 rounded bg-neutral-900/80 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner text-sm"
+            className="w-full px-2 h-8 ml-0 border border-neutral-700 rounded bg-neutral-900/80 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner"
+            style={{ fontSize: "16px" }}
           />
           <div className="flex flex-row items-center gap-0 ml-1 bg-neutral-900/80 rounded border border-neutral-800 px-1 py-0.5">
             <button

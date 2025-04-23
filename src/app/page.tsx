@@ -201,60 +201,55 @@ export default function Home() {
           className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 bg-black/80 border border-neutral-700 rounded-2xl shadow-2xl p-4 transition-all duration-300 ease-in-out transform backdrop-blur-md animate-[dynamicIslandOpen_400ms_cubic-bezier(0.4,0,0.2,1)] opacity-100 scale-100 pointer-events-auto h-fit max-h-[90vh]"
           ref={wrapperRef}
         >
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex flex-1">
-              <AnimatePresence mode="wait" initial={false}>
-                {state.isEditing !== null ? (
-                  <motion.div
-                    key="editing"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.22, ease: "easeInOut" }}
-                    className="flex items-center justify-start w-full h-8 rounded text-white text-sm select-none px-2 border border-transparent bg-transparent"
-                  >
-                    <span className="relative overflow-hidden">
-                      <span className="bg-gradient-to-r from-neutral-400 via-white to-neutral-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_2.5s_linear_infinite]">
-                        Editing...
-                      </span>
+          <div className="flex w-full gap-2 mb-4">
+            <AnimatePresence mode="wait" initial={false}>
+              {state.isEditing !== null ? (
+                <motion.div
+                  key="editing"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.22, ease: "easeInOut" }}
+                  className="flex items-center justify-start w-full h-8 rounded text-white text-sm select-none px-2 border border-transparent bg-transparent"
+                >
+                  <span className="relative overflow-hidden">
+                    <span className="bg-gradient-to-r from-neutral-400 via-white to-neutral-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_2.5s_linear_infinite]">
+                      Editing...
                     </span>
-                  </motion.div>
-                ) : (
-                  <motion.input
-                    key="input"
-                    type="text"
-                    value={state.input}
-                    onChange={handleInput}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleAddTask();
-                    }}
-                    placeholder="Add a new task"
-                    className="flex-1 px-2 h-8 border border-neutral-700 rounded bg-neutral-900/80 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner"
-                    style={{
-                      fontSize: "16px",
-                      transform: "scale(0.875)",
-                      transformOrigin: "left center",
-                    }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.22, ease: "easeInOut" }}
-                  />
-                )}
-              </AnimatePresence>
-            </div>
+                  </span>
+                </motion.div>
+              ) : (
+                <motion.input
+                  key="input"
+                  type="text"
+                  value={state.input}
+                  onChange={handleInput}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleAddTask();
+                  }}
+                  placeholder="Add a new task"
+                  className="w-full px-2 h-8 border border-neutral-700 rounded bg-neutral-900/40 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner bg-gradient-to-r from-neutral-400 via-white to-neutral-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_2.5s_linear_infinite]"
+                  style={{ fontSize: "16px" }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.22, ease: "easeInOut" }}
+                />
+              )}
+            </AnimatePresence>
+
             <button
               onClick={handleAddTask}
-              className={`w-8 h-8 flex items-center justify-center rounded font-bold transition shadow ${
+              className={`w-10 h-8 flex items-center justify-center rounded font-bold transition shadow ${
                 state.isEditing !== null
                   ? "bg-transparent border border-transparent cursor-default"
-                  : "bg-white text-neutral-900 hover:bg-white-300 active:scale-95"
+                  : "border border-neutral-700 text-neutral-700 hover:text-white active:scale-95 cursor-pointer"
               }`}
               disabled={state.isEditing !== null}
             >
               {state.isEditing !== null ? (
                 <Loader2
-                  className="w-5 h-5 animate-spin text-neutral-400"
+                  className="w-5 h-5 animate-spin text-neutral-400 "
                   strokeWidth={2.2}
                 />
               ) : (
@@ -275,7 +270,7 @@ export default function Home() {
               strategy={verticalListSortingStrategy}
             >
               <div>
-                <ul className="flex flex-col space-y-3" ref={listRef}>
+                <ul className="flex flex-col space-y-1" ref={listRef}>
                   {state.tasks.map((task) => (
                     <SortableItem
                       key={task.id}

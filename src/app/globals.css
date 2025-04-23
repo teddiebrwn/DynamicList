@@ -20,7 +20,10 @@
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(to bottom, #0a0a0a, #1a1a1a), url("/grain.png");
+  background-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: 64px 64px;
   color: var(--foreground);
 }
 
@@ -55,6 +58,15 @@ body {
     opacity: 0;
     transform: scaleX(0.7) scaleY(0.7);
     border-radius: 1rem;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position-x: 200%;
+  }
+  100% {
+    background-position-x: -200%;
   }
 }
 

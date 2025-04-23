@@ -1,9 +1,10 @@
 "use client";
 
-import { useSortable } from "@dnd-kit/sortable";
+import React from "react";
+import { useSortable, defaultAnimateLayoutChanges } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Task, Action } from "./reducer";
-import { Dispatch } from "react";
+import { Dispatch, memo, useCallback, useRef } from "react";
 import { Check, X, Pencil } from "lucide-react";
 
 type Props = {
@@ -16,9 +17,11 @@ type Props = {
   startEdit: (task: Task) => void;
   deleteTask: (id: string) => void;
   saveEdit: () => void;
+  overId: string | null;
+  activeId: string | null;
 };
 
-export function SortableItem({
+export const SortableItem = memo(function SortableItem({
   id,
   task,
   isEditing,
@@ -28,58 +31,90 @@ export function SortableItem({
   startEdit,
   deleteTask,
   saveEdit,
+  overId,
+  activeId,
 }: Props) {
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
-    transition,
     isDragging,
-  } = useSortable({ id });
-
+    transition,
+  } = useSortable({ id, animateLayoutChanges: defaultAnimateLayoutChanges });
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition: transition
-      ? "transform 400ms cubic-bezier(0.22, 1, 0.36, 1)"
-      : undefined,
+    transition:
+      !isDragging && transition
+        ? transition.replace(/\d+ms/, "300ms")
+        : undefined,
   };
-
+  const isOver = overId === id && activeId !== id;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch({ type: "SET_EDIT_INPUT", payload: e.target.value });
+    },
+    [dispatch]
+  );
+  const handleSaveEdit = useCallback(() => {
+    saveEdit();
+  }, [saveEdit]);
+  const handleCancelEdit = useCallback(() => {
+    dispatch({ type: "CANCEL_EDIT" });
+  }, [dispatch]);
+  const handleToggleTask = useCallback(() => {
+    toggleTask(task.id);
+  }, [toggleTask, task.id]);
+  const handleStartEdit = useCallback(() => {
+    startEdit(task);
+  }, [startEdit, task]);
+  const handleDeleteTask = useCallback(() => {
+    deleteTask(task.id);
+  }, [deleteTask, task.id]);
   return (
     <li
-      className={`flex items-center gap-1 py-1 rounded-lg shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] hover:shadow-[0_4px_16px_0_rgba(0,0,0,0.14)] transition-all duration-200 group backdrop-blur text-white/90 text-sm min-h-[32px] ${
-        isEditing === task.id ? "" : "px-1"
-      }${
+      className={`flex items-center w-full px-0 gap-2 py-1 rounded-lg shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] hover:shadow-[0_4px_16px_0_rgba(0,0,0,0.14)] transition-colors transition-shadow duration-150 group backdrop-blur text-white/90 text-sm min-h-[32px]${
         isDragging
           ? " z-20 ring-2 ring-blue-400 bg-neutral-800/90 scale-105"
           : ""
-      }`}
+      }${isOver ? " border-b-4 border-blue-400" : ""}`}
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
     >
+      <span
+        className={`cursor-move select-none flex items-center${
+          isEditing === task.id ? " hidden" : " mr-1"
+        }`}
+        {...attributes}
+        {...listeners}
+        aria-label="drag"
+      ></span>
       {isEditing === task.id ? (
         <>
           <input
+            ref={inputRef}
             placeholder="Edit task"
             value={editInput}
-            onChange={(e) =>
-              dispatch({ type: "SET_EDIT_INPUT", payload: e.target.value })
-            }
+            onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSaveEdit();
+            }}
             autoFocus
-            className="flex-1 px-2 py-1 border border-neutral-800 rounded bg-neutral-900/80 text-white/90 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-700/60 transition shadow-inner text-sm"
+            className="w-full flex-1 px-2 h-8 ml-0 border border-neutral-700 rounded bg-neutral-900/80 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner text-sm"
           />
           <div className="flex flex-row items-center gap-0 ml-1 bg-neutral-900/80 rounded border border-neutral-800 px-1 py-0.5">
             <button
-              onClick={saveEdit}
+              onClick={handleSaveEdit}
+              aria-label="save"
               className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-300 hover:text-white active:scale-95 transition"
             >
               <Check width={14} height={14} />
             </button>
             <div className="h-4 w-px bg-neutral-800 mx-0.5" />
             <button
-              onClick={() => dispatch({ type: "CANCEL_EDIT" })}
+              onClick={handleCancelEdit}
+              aria-label="cancel"
               className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-300 hover:text-white active:scale-95 transition"
             >
               <X width={14} height={14} />
@@ -89,8 +124,8 @@ export function SortableItem({
       ) : (
         <>
           <span
-            onClick={() => toggleTask(task.id)}
-            className={`flex-1 cursor-pointer select-none font-medium transition-all duration-200 ${
+            onClick={handleToggleTask}
+            className={`flex-1 cursor-pointer select-none font-medium transition-all duration-600 ${
               task.done ? "line-through text-gray-400" : "text-white/90"
             }`}
           >
@@ -98,14 +133,16 @@ export function SortableItem({
           </span>
           <div className="flex flex-row items-center gap-0 ml-1 bg-neutral-900/80 rounded border border-neutral-800 px-1 py-0.5">
             <button
-              onClick={() => startEdit(task)}
+              onClick={handleStartEdit}
+              aria-label="edit"
               className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-300 hover:text-white active:scale-95 transition"
             >
               <Pencil width={14} height={14} />
             </button>
             <div className="h-4 w-px bg-neutral-800 mx-0.5" />
             <button
-              onClick={() => deleteTask(task.id)}
+              onClick={handleDeleteTask}
+              aria-label="delete"
               className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-300 hover:text-white active:scale-95 transition"
             >
               <X width={14} height={14} />
@@ -115,4 +152,4 @@ export function SortableItem({
       )}
     </li>
   );
-}
+});

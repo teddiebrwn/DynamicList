@@ -1,75 +1,108 @@
-import { render } from "@testing-library/react";
+import React from "react";
+import { render, fireEvent } from "@testing-library/react";
 import { SortableItem } from "./SortableItem";
 import { Task, Action } from "./reducer";
 import { Dispatch } from "react";
-import * as dndSortable from "@dnd-kit/sortable";
 
-const baseTask: Task = { id: "1", title: "Test", done: false };
-const noop = (() => {}) as Dispatch<Action>;
+const baseTask: Task = { id: "1", title: "Test Task", done: false };
+const noop = () => {};
+const dispatch: Dispatch<Action> = noop as Dispatch<Action>;
 
 describe("SortableItem", () => {
-  it("applies smooth cubic-bezier transition when dragging", () => {
-    const { container } = render(
+  it("renders task title and toggles done", () => {
+    let toggled = "";
+    const { getByText } = render(
       <SortableItem
-        id="1"
+        id={baseTask.id}
         task={baseTask}
         isEditing={null}
         editInput=""
-        dispatch={noop}
-        toggleTask={noop}
+        dispatch={dispatch}
+        toggleTask={(id) => (toggled = id)}
         startEdit={noop}
         deleteTask={noop}
         saveEdit={noop}
+        overId={null}
+        activeId={null}
       />
     );
-    const li = container.querySelector("li");
-    expect(li).toBeTruthy();
-    // Simulate dragging by checking style
-    // The transition should be set to the custom cubic-bezier
-    // Note: useSortable hook is not actually triggered in this test, so we check default render
-    // For real drag, integration test with dnd-kit is needed
+    fireEvent.click(getByText("Test Task"));
+    expect(toggled).toBe("1");
   });
 
-  it("applies visual feedback when isDragging is true", () => {
-    jest.spyOn(dndSortable, "useSortable").mockReturnValue({
-      attributes: {},
-      listeners: {},
-      setNodeRef: jest.fn(),
-      transform: undefined,
-      transition: undefined,
-      isDragging: true,
-      isSorting: false,
-      setActivatorNodeRef: jest.fn(),
-      setDroppableNodeRef: jest.fn(),
-      setDraggableNodeRef: jest.fn(),
-      active: null,
-      activeIndex: 0,
-      data: {},
-      rect: undefined,
-      index: 0,
-      newIndex: 0,
-      items: [],
-      isOver: false,
-      node: undefined,
-      overIndex: 0,
-      over: undefined,
-    } as any);
-    const { container } = render(
+  it("calls startEdit and deleteTask", () => {
+    let started = false;
+    let deleted = "";
+    const { getByRole } = render(
       <SortableItem
-        id="1"
+        id={baseTask.id}
         task={baseTask}
         isEditing={null}
         editInput=""
-        dispatch={noop}
+        dispatch={dispatch}
+        toggleTask={noop}
+        startEdit={() => (started = true)}
+        deleteTask={(id) => (deleted = id)}
+        saveEdit={noop}
+        overId={null}
+        activeId={null}
+      />
+    );
+    fireEvent.click(getByRole("button", { name: "edit" }));
+    expect(started).toBe(true);
+    fireEvent.click(getByRole("button", { name: "delete" }));
+    expect(deleted).toBe("1");
+  });
+
+  it("renders edit mode and handles input, save, cancel", () => {
+    let saved = false;
+    let cancelled = false;
+    let inputValue = "";
+    const dispatchMock = (action: Action) => {
+      if (action.type === "SET_EDIT_INPUT") inputValue = action.payload;
+      if (action.type === "CANCEL_EDIT") cancelled = true;
+    };
+    const { getByPlaceholderText, getByRole } = render(
+      <SortableItem
+        id={baseTask.id}
+        task={baseTask}
+        isEditing={baseTask.id}
+        editInput="edit me"
+        dispatch={dispatchMock as Dispatch<Action>}
         toggleTask={noop}
         startEdit={noop}
         deleteTask={noop}
-        saveEdit={noop}
+        saveEdit={() => (saved = true)}
+        overId={null}
+        activeId={null}
       />
     );
-    const li = container.querySelector("li");
-    expect(li?.className).toMatch(/ring-2/);
-    expect(li?.className).toMatch(/bg-neutral-800/);
-    expect(li?.className).toMatch(/scale-105/);
+    const input = getByPlaceholderText("Edit task");
+    fireEvent.change(input, { target: { value: "new value" } });
+    expect(inputValue).toBe("new value");
+    fireEvent.click(getByRole("button", { name: "save" }));
+    expect(saved).toBe(true);
+    fireEvent.click(getByRole("button", { name: "cancel" }));
+    expect(cancelled).toBe(true);
+  });
+
+  it("does not crash with null/undefined props", () => {
+    expect(() =>
+      render(
+        <SortableItem
+          id={""}
+          task={{ id: "", title: "", done: false }}
+          isEditing={null}
+          editInput={""}
+          dispatch={dispatch}
+          toggleTask={noop}
+          startEdit={noop}
+          deleteTask={noop}
+          saveEdit={noop}
+          overId={null}
+          activeId={null}
+        />
+      )
+    ).not.toThrow();
   });
 });

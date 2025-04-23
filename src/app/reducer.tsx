@@ -13,7 +13,7 @@ export type State = {
 
 export type Action =
   | { type: "SET_INPUT"; payload: string }
-  | { type: "ADD_TASK" }
+  | { type: "ADD_TASK"; payload: string }
   | { type: "DELETE_TASK"; payload: string }
   | { type: "TOGGLE_TASK"; payload: string }
   | { type: "START_EDIT"; payload: Task }
@@ -28,16 +28,16 @@ export function reducer(state: State, action: Action): State {
     case "SET_INPUT":
       return { ...state, input: action.payload };
     case "ADD_TASK":
-      if (!state.input.trim()) return state;
+      if (!state.input.trim() || !action.payload) return state;
       return {
         ...state,
         tasks: [
-          ...state.tasks,
           {
-            id: crypto.randomUUID(),
+            id: action.payload,
             title: state.input.trim(),
             done: false,
           },
+          ...state.tasks,
         ],
         input: "",
       };

@@ -229,7 +229,12 @@ export default function Home() {
                       if (e.key === "Enter") handleAddTask();
                     }}
                     placeholder="Add a new task"
-                    className="flex-1 px-2 h-8 border border-neutral-700 rounded bg-neutral-900/80 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner text-sm"
+                    className="flex-1 px-2 h-8 border border-neutral-700 rounded bg-neutral-900/80 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner"
+                    style={{
+                      fontSize: "16px",
+                      transform: "scale(0.875)",
+                      transformOrigin: "left center",
+                    }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}

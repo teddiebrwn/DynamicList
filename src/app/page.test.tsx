@@ -189,4 +189,21 @@ describe("Home UI", () => {
     }).not.toThrow();
     expect(getByText("Final")).toBeInTheDocument();
   });
+
+  it("shows a lighter placeholder and blinking cursor when input is focused and empty", () => {
+    const { getByText, getByPlaceholderText } = render(<Home />);
+    fireEvent.click(getByText("Dynamic Island Todo List"));
+    const input = getByPlaceholderText("Add a new task");
+    input.focus();
+    expect(input).toHaveClass("blink-cursor");
+    expect(window.getComputedStyle(input).getPropertyValue("color")).not.toBe(
+      "rgb(255, 255, 255)"
+    );
+    // Blinking cursor is a pseudo-element, so we check class and focus state only
+    expect(document.activeElement).toBe(input);
+    fireEvent.change(input, { target: { value: "x" } });
+    expect(input.value).toBe("x");
+    // No blinking cursor when not empty
+    // (pseudo-element disappears, but we can't test pseudo-element directly)
+  });
 });

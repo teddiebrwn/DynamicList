@@ -73,6 +73,32 @@ body {
   }
 }
 
+@keyframes shimmer-border {
+  0% {
+    border-image-source: linear-gradient(270deg, #fff 0%, #aaa 50%, #fff 100%);
+    border-image-slice: 1;
+    border-image-width: 2px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+    border-image-position: 200%;
+  }
+  100% {
+    border-image-source: linear-gradient(270deg, #fff 0%, #aaa 50%, #fff 100%);
+    border-image-slice: 1;
+    border-image-width: 2px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+    border-image-position: -200%;
+  }
+}
+
+.shimmer-border {
+  border-width: 2px;
+  border-style: solid;
+  border-image: linear-gradient(270deg, #fff 0%, #aaa 50%, #fff 100%) 1;
+  animation: shimmer-border 2s linear infinite;
+}
+
 .vercel-hover {
   transition: box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
     border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
@@ -107,4 +133,32 @@ body {
   overflow: hidden;
   touch-action: none;
   font-size: 16px;
+}
+
+@keyframes blinkCursor {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.blink-cursor:focus:placeholder-shown::before {
+  content: "|";
+  color: #e5e5e5;
+  opacity: 0.7;
+  margin-left: 2px;
+  animation: blinkCursor 1s steps(1) infinite;
+  position: absolute;
+  pointer-events: none;
+}
+
+.blink-cursor {
+  position: relative;
+  z-index: 1;
+  caret-color: #fff;
 }

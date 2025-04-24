@@ -82,17 +82,8 @@ export const SortableItem = memo(function SortableItem({
     >
       {isDragging && (
         <div
-          className="pointer-events-none absolute inset-0 rounded-lg border-2 border-transparent animate-[shimmer_2.5s_linear_infinite]"
-          style={{
-            background:
-              "linear-gradient(90deg, #a3a3a3 0%, #fff 50%, #a3a3a3 100%)",
-            backgroundSize: "200% 100%",
-            WebkitMask:
-              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-            WebkitMaskComposite: "xor",
-            maskComposite: "exclude",
-            boxSizing: "border-box",
-          }}
+          className="absolute -inset-1 rounded-xl border border-white/10 pointer-events-none"
+          style={{ filter: "blur(0.5px)" }}
         />
       )}
       {isOver && (

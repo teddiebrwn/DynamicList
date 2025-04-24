@@ -32,6 +32,30 @@ import {
 
 import { SortableItem } from "./SortableItem";
 
+export function useTypewriterPlaceholders(
+  placeholders: string[],
+  speed = 80,
+  pause = 1200
+): string {
+  const [index, setIndex] = useState(0);
+  const [typed, setTyped] = useState("");
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (typed.length < placeholders[index].length) {
+      timeout = setTimeout(() => {
+        setTyped(placeholders[index].slice(0, typed.length + 1));
+      }, speed);
+    } else {
+      timeout = setTimeout(() => {
+        setTyped("");
+        setIndex((i) => (i + 1) % placeholders.length);
+      }, pause);
+    }
+    return () => clearTimeout(timeout);
+  }, [typed, index, placeholders, speed, pause]);
+  return typed;
+}
+
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -48,6 +72,14 @@ export default function Home() {
     overId: string | null;
     activeId: string | null;
   }>({ overId: null, activeId: null });
+
+  const typewriterPlaceholder = useTypewriterPlaceholders([
+    "Add a new task",
+    "What's next?",
+    "Type your todo…",
+  ]);
+
+  const [inputFocused, setInputFocused] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -197,100 +229,117 @@ export default function Home() {
         </div>
       )}
       {isOpen && (
-        <div
-          className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 bg-black/80 border border-neutral-700 rounded-2xl shadow-2xl p-4 transition-all duration-300 ease-in-out transform backdrop-blur-md animate-[dynamicIslandOpen_400ms_cubic-bezier(0.4,0,0.2,1)] opacity-100 scale-100 pointer-events-auto h-fit max-h-[90vh]"
-          ref={wrapperRef}
-        >
-          <div className="flex w-full gap-2 mb-4">
-            <AnimatePresence mode="wait" initial={false}>
-              {state.isEditing !== null ? (
-                <motion.div
-                  key="editing"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.22, ease: "easeInOut" }}
-                  className="flex items-center justify-start w-full h-8 rounded text-white text-sm select-none px-2 border border-transparent bg-transparent"
-                >
-                  <span className="relative overflow-hidden">
-                    <span className="bg-gradient-to-r from-neutral-400 via-white to-neutral-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_2.5s_linear_infinite]">
-                      Editing...
-                    </span>
-                  </span>
-                </motion.div>
-              ) : (
-                <motion.input
-                  key="input"
-                  type="text"
-                  value={state.input}
-                  onChange={handleInput}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleAddTask();
-                  }}
-                  placeholder="Add a new task"
-                  className="w-full px-2 h-8 border border-neutral-700 rounded bg-neutral-900/40 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner bg-gradient-to-r from-neutral-400 via-white to-neutral-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_2.5s_linear_infinite]"
-                  style={{ fontSize: "16px" }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.22, ease: "easeInOut" }}
-                />
-              )}
-            </AnimatePresence>
-
-            <button
-              onClick={handleAddTask}
-              className={`w-10 h-8 flex items-center justify-center rounded font-bold transition shadow ${
-                state.isEditing !== null
-                  ? "bg-transparent border border-transparent cursor-default"
-                  : "border border-neutral-700 text-neutral-700 hover:text-white active:scale-95 cursor-pointer"
-              }`}
-              disabled={state.isEditing !== null}
-            >
-              {state.isEditing !== null ? (
-                <Loader2
-                  className="w-5 h-5 animate-spin text-neutral-400 "
-                  strokeWidth={2.2}
-                />
-              ) : (
-                <Plus width={16} height={16} />
-              )}
-            </button>
-          </div>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDragEnd}
-            modifiers={[restrictToVerticalAxis]}
+        <div className="relative inline-block w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 align-top">
+          <motion.div
+            className="absolute -inset-2 rounded-3xl border border-white/10 pointer-events-none"
+            style={{ filter: "blur(0.5px)" }}
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.7 }}
+            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+          />
+          <div
+            className="w-full bg-black/80 border border-neutral-700 rounded-2xl shadow-2xl p-4 transition-all duration-300 ease-in-out transform backdrop-blur-md animate-[dynamicIslandOpen_400ms_cubic-bezier(0.4,0,0.2,1)] opacity-100 scale-100 pointer-events-auto h-fit max-h-[90vh]"
+            ref={wrapperRef}
           >
-            <SortableContext
-              items={state.tasks.map((t) => t.id)}
-              strategy={verticalListSortingStrategy}
+            <div className="flex w-full gap-2 mb-4">
+              <AnimatePresence mode="wait" initial={false}>
+                {state.isEditing !== null ? (
+                  <motion.div
+                    key="editing"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.22, ease: "easeInOut" }}
+                    className="flex items-center justify-start w-full h-8 rounded text-white text-sm select-none px-2 border border-transparent bg-transparent"
+                  >
+                    <span className="relative overflow-hidden">
+                      <span className="bg-gradient-to-r from-neutral-400 via-white to-neutral-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_2.5s_linear_infinite]">
+                        Editing...
+                      </span>
+                    </span>
+                  </motion.div>
+                ) : (
+                  <motion.input
+                    key="input"
+                    type="text"
+                    value={state.input}
+                    onChange={handleInput}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleAddTask();
+                    }}
+                    placeholder={
+                      state.input === "" && !inputFocused
+                        ? typewriterPlaceholder
+                        : ""
+                    }
+                    className={`w-full px-2 h-8 font-light text-white rounded bg-neutral-900/40 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/90 transition shadow-inner${
+                      inputFocused ? " blink-cursor" : ""
+                    }`}
+                    onFocus={() => setInputFocused(true)}
+                    onBlur={() => setInputFocused(false)}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.22, ease: "easeInOut" }}
+                  />
+                )}
+              </AnimatePresence>
+
+              <button
+                onClick={handleAddTask}
+                className={`w-10 h-8 flex items-center justify-center rounded font-bold transition shadow ${
+                  state.isEditing !== null
+                    ? "bg-transparent border border-transparent cursor-default"
+                    : "border border-neutral-700 text-neutral-700 hover:text-white active:scale-95 cursor-pointer"
+                }`}
+                disabled={state.isEditing !== null}
+              >
+                {state.isEditing !== null ? (
+                  <Loader2
+                    className="w-5 h-5 animate-spin text-neutral-400 "
+                    strokeWidth={2.2}
+                  />
+                ) : (
+                  <Plus width={16} height={16} />
+                )}
+              </button>
+            </div>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDragEnd={handleDragEnd}
+              modifiers={[restrictToVerticalAxis]}
             >
-              <div>
-                <ul className="flex flex-col space-y-1" ref={listRef}>
-                  {state.tasks.map((task) => (
-                    <SortableItem
-                      key={task.id}
-                      id={task.id}
-                      task={task}
-                      isEditing={state.isEditing}
-                      editInput={state.editInput}
-                      dispatch={dispatch}
-                      toggleTask={toggleTask}
-                      startEdit={startEdit}
-                      deleteTask={deleteTask}
-                      saveEdit={saveEdit}
-                      overId={dragState.overId}
-                      activeId={dragState.activeId}
-                    />
-                  ))}
-                </ul>
-              </div>
-            </SortableContext>
-          </DndContext>
+              <SortableContext
+                items={state.tasks.map((t) => t.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <div>
+                  <ul className="flex flex-col space-y-1" ref={listRef}>
+                    {state.tasks.map((task) => (
+                      <SortableItem
+                        key={task.id}
+                        id={task.id}
+                        task={task}
+                        isEditing={state.isEditing}
+                        editInput={state.editInput}
+                        dispatch={dispatch}
+                        toggleTask={toggleTask}
+                        startEdit={startEdit}
+                        deleteTask={deleteTask}
+                        saveEdit={saveEdit}
+                        overId={dragState.overId}
+                        activeId={dragState.activeId}
+                      />
+                    ))}
+                  </ul>
+                </div>
+              </SortableContext>
+            </DndContext>
+          </div>
         </div>
       )}
     </div>

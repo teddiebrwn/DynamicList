@@ -28,6 +28,8 @@ body {
   position: fixed;
   inset: 0;
   -webkit-overflow-scrolling: auto;
+  font-size: 16px;
+  text-transform: scale(0.6);
 }
 
 @keyframes dynamicIslandOpen {

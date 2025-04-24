@@ -4,7 +4,7 @@ export function useTypewriterPlaceholders(
   placeholders: string[],
   speed = 40,
   pause = 1200
-): string {
+): { typed: string; untyped: string } {
   const [index, setIndex] = useState(0);
   const [typed, setTyped] = useState("");
   useEffect(() => {
@@ -21,5 +21,8 @@ export function useTypewriterPlaceholders(
     }
     return () => clearTimeout(timeout);
   }, [typed, index, placeholders, speed, pause]);
-  return typed;
+  return {
+    typed,
+    untyped: placeholders[index].slice(typed.length),
+  };
 }

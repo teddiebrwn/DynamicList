@@ -51,9 +51,13 @@ export default function Home() {
   }>({ overId: null, activeId: null });
 
   const typewriterPlaceholder = useTypewriterPlaceholders([
-    "Add a new task",
+    "Hello",
+    "Got an idea?",
+    "Jot a quick note…",
+    "Turn notes into plans…",
+    "Plans spark action…",
+    "Build your vision…",
     "What's next?",
-    "Type your todo…",
   ]);
 
   const [inputFocused, setInputFocused] = useState(false);
@@ -237,29 +241,45 @@ export default function Home() {
                     </span>
                   </motion.div>
                 ) : (
-                  <motion.input
-                    key="input"
-                    type="text"
-                    value={state.input}
-                    onChange={handleInput}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleAddTask();
-                    }}
-                    placeholder={
-                      state.input === "" && !inputFocused
-                        ? typewriterPlaceholder
-                        : ""
-                    }
-                    className={`w-full px-2 h-8 font-light text-white rounded bg-neutral-900/70 placeholder:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-white-400/90 transition shadow-inner${
-                      inputFocused ? " blink-cursor" : ""
-                    }`}
-                    onFocus={() => setInputFocused(true)}
-                    onBlur={() => setInputFocused(false)}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.22, ease: "easeInOut" }}
-                  />
+                  <div className="relative w-full">
+                    <motion.input
+                      key="input"
+                      type="text"
+                      value={state.input}
+                      onChange={handleInput}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleAddTask();
+                      }}
+                      className={`w-full px-2 h-8 text-sm font-light text-white rounded bg-neutral-900/70 placeholder:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-white-400/90 transition shadow-inner${
+                        inputFocused ? " blink-cursor" : ""
+                      }`}
+                      onFocus={() => setInputFocused(true)}
+                      onBlur={() => setInputFocused(false)}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.22, ease: "easeInOut" }}
+                      style={{
+                        position: "relative",
+                        zIndex: 2,
+                        background: "transparent",
+                      }}
+                    />
+                    {state.input === "" && !inputFocused && (
+                      <span
+                        className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-sm font-light select-none flex"
+                        aria-hidden="true"
+                        style={{ zIndex: 1 }}
+                      >
+                        <span className="text-white/90">
+                          {typewriterPlaceholder.typed}
+                        </span>
+                        <span className="text-neutral-400/70">
+                          {typewriterPlaceholder.untyped}
+                        </span>
+                      </span>
+                    )}
+                  </div>
                 )}
               </AnimatePresence>
 

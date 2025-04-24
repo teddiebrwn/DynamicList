@@ -136,7 +136,7 @@ export const SortableItem = memo(function SortableItem({
           <span
             onClick={handleToggleTask}
             className={`flex-1 cursor-pointer select-none font-medium transition-all duration-600 ${
-              task.done ? "line-through text-gray-400" : "text-white/90"
+              task.done ? "line-through text-neutral-600" : "text-white/90"
             }`}
           >
             {task.title}

@@ -288,20 +288,23 @@ export default function Home() {
 
               <button
                 onClick={handleAddTask}
-                className={`w-10 h-8 flex items-center justify-center rounded font-bold transition shadow ${
-                  state.isEditing !== null
-                    ? "bg-transparent border border-transparent cursor-default"
-                    : "border border-neutral-700 text-neutral-700 hover:text-white active:scale-95 cursor-pointer"
-                }`}
-                disabled={state.isEditing !== null}
+                className={`w-10 h-8 flex items-center justify-center rounded-lg transition-colors duration-150
+                  ${
+                    state.input.trim() && state.isEditing === null
+                      ? "bg-transparent hover:bg-white/10 active:bg-white/20 text-white opacity-100 cursor-pointer"
+                      : "bg-transparent text-white/40 opacity-60 cursor-default"
+                  }
+                `}
+                disabled={!state.input.trim() || state.isEditing !== null}
+                aria-label="add"
               >
                 {state.isEditing !== null ? (
                   <Loader2
-                    className="w-5 h-5 animate-spin text-neutral-400 "
+                    className="w-5 h-5 animate-spin text-white "
                     strokeWidth={2.2}
                   />
                 ) : (
-                  <Plus width={16} height={16} />
+                  <Plus width={16} height={16} className="" />
                 )}
               </button>
             </div>

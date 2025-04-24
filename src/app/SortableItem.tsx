@@ -82,7 +82,7 @@ export const SortableItem = memo(function SortableItem({
     >
       {isDragging && (
         <div
-          className="absolute -inset-1 rounded-xl border border-white/10 pointer-events-none"
+          className="absolute -inset-1 rounded-xl border border-white/30 pointer-events-none"
           style={{ filter: "blur(0.5px)" }}
         />
       )}
@@ -90,7 +90,7 @@ export const SortableItem = memo(function SortableItem({
         <div className="absolute left-0 right-0 bottom-0 h-1.5 rounded-b shimmer-bg animate-shimmer" />
       )}
       <span
-        className={`w-4 h-4  border-r-[1px] border-dashed border-neutral-800  cursor-grab select-none flex items-center${
+        className={`w-6 h-full border-r border-dashed  border-neutral-600 rounded-tl-lg rounded-bl-lg cursor-grab select-none flex items-center${
           isEditing === task.id ? " hidden" : " mr-1"
         }`}
         aria-label="drag"
@@ -110,15 +110,15 @@ export const SortableItem = memo(function SortableItem({
               if (e.key === "Enter") handleSaveEdit();
             }}
             autoFocus
-            className="w-full px-2 h-8 ml-0 border border-neutral-700 rounded bg-neutral-900/80 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner"
+            className="w-full px-2 h-8 ml-0 border text- font-light border-neutral-700 rounded bg-neutral-900/80 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/60 transition shadow-inner"
             style={{ fontSize: "16px" }}
           />
-          <div className="flex flex-row items-center gap-0 ml-1 bg-neutral-900/80 rounded border border-neutral-800 px-1 py-0.5">
+          <div className="flex flex-row items-center gap-0 ml-1 bg-neutral-900/80 rounded border border-neutral-500 px-1 py-0.5">
             {typeof window === "undefined" || window.innerWidth > 600 ? (
               <button
                 onClick={handleSaveEdit}
                 aria-label="save"
-                className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-300 hover:text-white active:scale-95 transition"
+                className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-800 hover:text-white active:scale-95 transition cursor-pointer"
               >
                 <Check width={14} height={14} />
               </button>
@@ -127,7 +127,7 @@ export const SortableItem = memo(function SortableItem({
             <button
               onClick={handleCancelEdit}
               aria-label="cancel"
-              className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-300 hover:text-white active:scale-95 transition"
+              className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-800 hover:text-white active:scale-95 transition cursor-pointer "
             >
               <X width={14} height={14} />
             </button>
@@ -143,19 +143,19 @@ export const SortableItem = memo(function SortableItem({
           >
             {task.title}
           </span>
-          <div className="flex flex-row items-center gap-0 ml-1 bg-neutral-900/80 rounded border border-neutral-800 px-1 py-0.5">
+          <div className="flex flex-row items-center gap-0 ml-1 bg-neutral-900/80 rounded border border-neutral-500 px-1 py-0.5">
             <button
               onClick={handleStartEdit}
               aria-label="edit"
-              className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-300 hover:text-white active:scale-95 transition"
+              className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-800 hover:text-white active:scale-95 transition cursor-pointer"
             >
               <Pencil width={14} height={14} />
             </button>
-            <div className="h-4 w-px bg-neutral-800 mx-0.5" />
+            <div className="h-4 w-px bg-neutral-600 mx-0.5" />
             <button
               onClick={handleDeleteTask}
               aria-label="delete"
-              className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-300 hover:text-white active:scale-95 transition"
+              className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-800 hover:text-white active:scale-95 transition cursor-pointer"
             >
               <X width={14} height={14} />
             </button>

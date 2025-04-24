@@ -208,7 +208,7 @@ export default function Home() {
       {isOpen && (
         <div className="relative inline-block w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 align-top">
           <motion.div
-            className="absolute -inset-2 rounded-3xl border border-white/10 pointer-events-none"
+            className="absolute -inset-2 rounded-3xl border border-white/30 pointer-events-none"
             style={{ filter: "blur(0.5px)" }}
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -216,7 +216,7 @@ export default function Home() {
             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
           />
           <div
-            className="w-full bg-black/80 border border-neutral-700 rounded-2xl shadow-2xl p-4 transition-all duration-300 ease-in-out transform backdrop-blur-md animate-[dynamicIslandOpen_400ms_cubic-bezier(0.4,0,0.2,1)] opacity-100 scale-100 pointer-events-auto h-fit max-h-[90vh]"
+            className="w-full bg-black/80 border border-neutral-500 rounded-2xl shadow-2xl p-4 transition-all duration-300 ease-in-out transform backdrop-blur-md animate-[dynamicIslandOpen_400ms_cubic-bezier(0.4,0,0.2,1)] opacity-100 scale-100 pointer-events-auto h-fit max-h-[90vh]"
             ref={wrapperRef}
           >
             <div className="flex w-full gap-2 mb-4">
@@ -250,7 +250,7 @@ export default function Home() {
                         ? typewriterPlaceholder
                         : ""
                     }
-                    className={`w-full px-2 h-8 font-light text-white rounded bg-neutral-900/40 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-white-400/90 transition shadow-inner${
+                    className={`w-full px-2 h-8 font-light text-white rounded bg-neutral-900/70 placeholder:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-white-400/90 transition shadow-inner${
                       inputFocused ? " blink-cursor" : ""
                     }`}
                     onFocus={() => setInputFocused(true)}

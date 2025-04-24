@@ -160,5 +160,5 @@ body {
 .blink-cursor {
   position: relative;
   z-index: 1;
-  caret-color: #fff;
+  caret-color: rgba(156, 163, 175, 0.7);
 }

@@ -114,13 +114,15 @@ export const SortableItem = memo(function SortableItem({
             style={{ fontSize: "16px" }}
           />
           <div className="flex flex-row items-center gap-0 ml-1 bg-neutral-900/80 rounded border border-neutral-800 px-1 py-0.5">
-            <button
-              onClick={handleSaveEdit}
-              aria-label="save"
-              className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-300 hover:text-white active:scale-95 transition"
-            >
-              <Check width={14} height={14} />
-            </button>
+            {typeof window === "undefined" || window.innerWidth > 600 ? (
+              <button
+                onClick={handleSaveEdit}
+                aria-label="save"
+                className="w-6 h-6 flex items-center justify-center rounded-none bg-transparent text-neutral-300 hover:text-white active:scale-95 transition"
+              >
+                <Check width={14} height={14} />
+              </button>
+            ) : null}
             <div className="h-4 w-px bg-neutral-800 mx-0.5" />
             <button
               onClick={handleCancelEdit}

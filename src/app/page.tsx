@@ -267,7 +267,7 @@ export default function Home() {
                     />
                     {state.input === "" && !inputFocused && (
                       <span
-                        className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-sm font-light select-none flex"
+                        className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 font-light select-none flex"
                         aria-hidden="true"
                         style={{ zIndex: 1 }}
                       >
@@ -283,29 +283,27 @@ export default function Home() {
                 )}
               </AnimatePresence>
 
-              {typeof window === "undefined" || window.innerWidth > 600 ? (
-                <button
-                  onClick={handleAddTask}
-                  className={`w-10 h-8 flex items-center justify-center rounded-lg transition-colors duration-150
-                    ${
-                      state.input.trim() && state.isEditing === null
-                        ? "bg-transparent hover:bg-white/10 active:bg-white/20 text-white opacity-100 cursor-pointer"
-                        : "bg-transparent text-white/40 opacity-60 cursor-default"
-                    }
-                  `}
-                  disabled={!state.input.trim() || state.isEditing !== null}
-                  aria-label="add"
-                >
-                  {state.isEditing !== null ? (
-                    <Loader2
-                      className="w-5 h-5 animate-spin text-white "
-                      strokeWidth={2.2}
-                    />
-                  ) : (
-                    <Plus width={16} height={16} className="" />
-                  )}
-                </button>
-              ) : null}
+              <button
+                onClick={handleAddTask}
+                className={`w-10 h-8 flex items-center justify-center rounded-lg transition-colors duration-150
+                  ${
+                    state.input.trim() && state.isEditing === null
+                      ? "bg-transparent hover:bg-white/10 active:bg-white/20 text-white opacity-100 cursor-pointer"
+                      : "bg-transparent text-white/40 opacity-60 cursor-default"
+                  }
+                `}
+                disabled={!state.input.trim() || state.isEditing !== null}
+                aria-label="add"
+              >
+                {state.isEditing !== null ? (
+                  <Loader2
+                    className="w-5 h-5 animate-spin text-white "
+                    strokeWidth={2.2}
+                  />
+                ) : (
+                  <Plus width={16} height={16} className="" />
+                )}
+              </button>
             </div>
             <DndContext
               sensors={sensors}

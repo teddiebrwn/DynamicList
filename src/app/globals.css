@@ -199,3 +199,10 @@ body {
     transform: rotate(360deg);
   }
 }
+
+input,
+textarea {
+  font-size: 16px !important;
+  transform: scale(0.75);
+  transform-origin: left center;
+}
